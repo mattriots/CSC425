@@ -4,11 +4,14 @@ from Crypto.Random import get_random_bytes
 from Crypto.Util.Padding import pad, unpad
 import random
 import hashlib
+
+hex_val = 'ff' # 1111 1111
+
 AES_KEY_SIZE = 16
-AES_KEY = get_random_bytes(AES_KEY_SIZE)
+AES_KEY = bytes.fromhex(hex_val) * AES_KEY_SIZE
 
 RC4_KEY_SIZE = 5
-RC4_KEY = get_random_bytes(RC4_KEY_SIZE)
+RC4_KEY = bytes.fromhex('ff') * RC4_KEY_SIZE
 
 
 def main():
