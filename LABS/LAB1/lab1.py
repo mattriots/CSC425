@@ -61,32 +61,33 @@ def decrypt_RC4(ciphertext):
     # Now just need to make loop that increments the key and tests it in the functions below
     # Then compare it to the ciphertext and see if we have a match?
 
+   
     S = list(range(256))
     j = 0
     output = []
     test_Key = bytes.fromhex('00') * RC4_KEY_SIZE
     plain_Key = int.from_bytes(test_Key, 'big')
-    plain_Key = plain_Key + 1
+    
+    while plain_Key < int.from_bytes(b'ffffffffff', 'big'):
 
-    test_Key = plain_Key.to_bytes(RC4_KEY_SIZE, 'big')
+        test_Key = plain_Key.to_bytes(RC4_KEY_SIZE, 'big')
+        listObj = list(S)
 
-    listObj = list(S)
-    # This works but Im using the KEY. How Can we do it with just the key length!?
-    # I do not believe it is possible. At least for the scope of this lab
+        for i in listObj:
+            j = (j + S[i] + test_Key[i % RC4_KEY_SIZE]) % 256
+            S[i], S[j] = S[j], S[i]
 
-    for i in listObj:
-        j = (j + S[i] + test_Key[i % RC4_KEY_SIZE]) % 256
-        S[i], S[j] = S[j], S[i]
+        i = j = 0
+        for char in ciphertext:
+            i = (i + 1) % 256
+            j = (j + S[i]) % 256
+            S[i], S[j] = S[j], S[i]
+            output.append(chr(char ^ S[(S[i] + S[j]) % 256]))
 
-    i = j = 0
-    for char in ciphertext:
-        i = (i + 1) % 256
-        j = (j + S[i]) % 256
-        S[i], S[j] = S[j], S[i]
-        output.append(chr(char ^ S[(S[i] + S[j]) % 256]))
-
-    decrypted = ''.join(output)
-    print(decrypted)
+        decrypted = ''.join(output)
+        print(decrypted)
+        plain_Key = int.from_bytes(test_Key, 'big')
+        plain_Key = plain_Key + 1
 
 
 main()
