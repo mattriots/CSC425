@@ -1,9 +1,6 @@
 from Crypto.Cipher import AES
 from Crypto.Cipher import ARC4
-from Crypto.Random import get_random_bytes
-from Crypto.Util.Padding import pad, unpad
-import random
-import hashlib
+from Crypto.Util.Padding import pad
 
 hex_val = 'ff'  # 1111 1111
 
@@ -15,7 +12,7 @@ RC4_KEY = bytes.fromhex(hex_val) * RC4_KEY_SIZE
 
 
 def main():
-    AES_ciphertext = encrypt_AES()
+    encrypt_AES()
     RC4_ciphertext = encrypt_RC4()
     decrypt_RC4(RC4_ciphertext)
 
@@ -51,24 +48,20 @@ def encrypt_RC4():
     return ciphertext
 
 
-def decrypt_AES(ciphertext):
-
-    cipher = AES.new()
+# def decrypt_AES(ciphertext):
+    # It is possible we could get lucky and happen to stumble upon the right decryption
+    # But it is most likely it would take us to the end of time to crack this!
 
 
 def decrypt_RC4(ciphertext):
 
-    # Now just need to make loop that increments the key and tests it in the functions below
-    # Then compare it to the ciphertext and see if we have a match?
-
-   
     S = list(range(256))
     j = 0
     output = []
-    test_Key = bytes.fromhex('00') * RC4_KEY_SIZE
+    test_Key = bytes.fromhex('FF') * RC4_KEY_SIZE
     plain_Key = int.from_bytes(test_Key, 'big')
-    
-    while plain_Key < int.from_bytes(b'ffffffffff', 'big'):
+
+    while plain_Key > 0:
 
         test_Key = plain_Key.to_bytes(RC4_KEY_SIZE, 'big')
         listObj = list(S)
@@ -85,9 +78,11 @@ def decrypt_RC4(ciphertext):
             output.append(chr(char ^ S[(S[i] + S[j]) % 256]))
 
         decrypted = ''.join(output)
-        print(decrypted)
+        if (decrypted == "this is the wireless security lab"):
+            print(decrypted)
+            break
         plain_Key = int.from_bytes(test_Key, 'big')
-        plain_Key = plain_Key + 1
+        plain_Key = plain_Key - 1
 
 
 main()
