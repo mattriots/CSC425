@@ -142,7 +142,6 @@ def modifyBit(ciphertext):
     ciplist = bytearray(ciphertext)
 
     ciplist[3] = ((ciplist[0]) ^ ord('f') ^ ord('d'))
-    # ciplist[4] = ((ciplist[4]) & ord('a'))
 
     return bytes(ciplist)
 
@@ -192,20 +191,5 @@ def decrypt_All(ciphertext_ECB, ciphertext_CBC, ciphertext_CFB,
     # plain_CTR = plain_CTR.decode()
     plain_CTR = urllib.parse.unquote(plain_CTR)
     print("CTR: ", plain_CTR)
-
-
-
-   
-   
-    
-
-   
-
-    
-    
-   
-   
-   
-
 
 main()
